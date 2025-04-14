@@ -4,13 +4,15 @@ import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Transactional
 public abstract class CommonDAOImpl<T, ID extends Serializable> implements CommonDAO<T, ID> {
 	
-	private EntityManager em;
+	@PersistenceContext
+	protected EntityManager em;
 	
 	private Class<T> entityClass;
 	
