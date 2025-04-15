@@ -3,7 +3,8 @@ package dao;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-import SPCA.SPCA.Book;
+
+import entities.Book;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 

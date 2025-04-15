@@ -1,4 +1,4 @@
-package SPCA.SPCA;
+package entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

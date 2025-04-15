@@ -1,4 +1,4 @@
-package SPCA.SPCA;
+package entities;
 
 import java.util.Date;
 

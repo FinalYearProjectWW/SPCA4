@@ -3,8 +3,8 @@ package dao;
 import java.io.Serializable;
 import java.util.List;
 
-import SPCA.SPCA.Book;
-import SPCA.SPCA.Customer;
+import entities.Book;
+import entities.Customer;
 
 public interface CommonDAO<T, ID extends Serializable> {
 	T findByID(int id);

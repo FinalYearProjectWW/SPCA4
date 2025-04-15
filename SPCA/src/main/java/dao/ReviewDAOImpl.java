@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import SPCA.SPCA.Book;
-import SPCA.SPCA.Review;
+import entities.Book;
+import entities.Review;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
