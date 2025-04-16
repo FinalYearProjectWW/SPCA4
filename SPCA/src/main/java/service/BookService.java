@@ -41,4 +41,21 @@ public class BookService {
 	public void deleteBook(Book book) {
 		bookDAO.delete(book);
 	}
+	
+	public void sortBooks(List<Book> books, String sort, boolean ascending) {
+		SortingStrategy ss;
+		
+		switch(sort.toLowerCase()) {
+		case "title":
+			ss = new SortByTitleStrategy();
+			break;
+		case "price":
+			ss = new SortByPriceStrategy();
+			break;
+		default:
+			ss = new SortByTitleStrategy();
+			break;
+		}
+		ss.sort(books, ascending);
+	}
 }

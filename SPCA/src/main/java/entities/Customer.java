@@ -1,6 +1,5 @@
 package entities;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,50 +19,63 @@ public class Customer {
 	
 	public Customer() {}
 	
-	public Customer(String u, String p, String sa, String pm) {
-		this.username = u;
-		this.password = p;
-		this.shippingAddress = sa;
-		this.paymentMethod = pm;
+	private Customer(Builder builder) {
+		this.id = builder.id;
+		this.username = builder.username;
+		this.password = builder.password;
+		this.shippingAddress = builder.shippingAddress;
+		this.paymentMethod = builder.paymentMethod;
 	}
 
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getUsername() {
 		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getShippingAddress() {
 		return shippingAddress;
-	}
-
-	public void setShippingAddress(String shippingAddress) {
-		this.shippingAddress = shippingAddress;
 	}
 
 	public String getPaymentMethod() {
 		return paymentMethod;
 	}
 
-	public void setPaymentMethod(String paymentMethod) {
-		this.paymentMethod = paymentMethod;
+	public static class Builder {
+		private final String username;
+		private final String password;
+		private int id = 0;
+		private String shippingAddress = "";
+		private String paymentMethod = "";
+		
+		public Builder(String username, String password) {
+			this.username = username;
+			this.password = password;
+		}
+		
+		public Builder id(int id) {
+			this.id = id;
+			return this;
+		}
+		
+		public Builder shippingAddress(String shippingAddress) {
+			this.shippingAddress = shippingAddress;
+			return this;
+		}
+		
+		public Builder paymentMethod(String paymentMethod) {
+			this.paymentMethod = paymentMethod;
+			return this;
+		}
+		
+		public Customer build() {
+			return new Customer(this);
+		}
 	}
 }

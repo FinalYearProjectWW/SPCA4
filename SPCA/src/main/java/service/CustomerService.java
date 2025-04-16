@@ -22,7 +22,11 @@ public class CustomerService {
 		return instance;
 	}
 	
-	public void registerCustomer(Customer customer) {
+	public void registerCustomer(String username, String password, String shippingAddress, String paymentMethod) {
+		Customer customer = new Customer.Builder(username, password)
+				.shippingAddress(shippingAddress)
+				.paymentMethod(paymentMethod)
+				.build();
 		customerDAO.save(customer);
 	}
 	
