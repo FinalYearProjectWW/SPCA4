@@ -30,15 +30,18 @@ public class Order {
     
     private Long totalAmount;
     
+    private String status;
+    
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
     
     public Order() {}
 
-    public Order(Customer c, Date od, Long ta, List<OrderItem> oi) {
+    public Order(Customer c, Date od, Long ta, String s, List<OrderItem> oi) {
         this.customer = c;
         this.orderDate = od;
         this.totalAmount = ta;
+        this.status = s;
         this.orderItems = oi;
     }
 
@@ -80,5 +83,13 @@ public class Order {
 
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }
