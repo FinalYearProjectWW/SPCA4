@@ -39,4 +39,16 @@ public class OrderDAOImpl extends CommonDAOImpl<Order, Integer> implements Order
 			em.merge(order);
 		}
 	}
+
+	@Override
+	public Order findCartByCustomerId(int customerId) {
+		// TODO Auto-generated method stub
+		try {
+			return em.createQuery("SELECT o FROM Order o WHERE o.customer.id = :customerId AND o.status = 'IN_CART'", Order.class)
+					.setParameter("customerId", customerId)
+					.getSingleResult();		
+		}catch (jakarta.persistence.NoResultException e) {
+			return null;
+		}
+	}
 }

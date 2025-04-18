@@ -3,6 +3,7 @@ package service;
 import java.util.List;
 import dao.CustomerDAO;
 import dao.CustomerDAOImpl;
+import entities.Book;
 import entities.Customer;
 
 public class CustomerService {
@@ -44,5 +45,9 @@ public class CustomerService {
 	
 	public List<Customer> findAllCustomers() {
 		return customerDAO.findAll();
-	}	
+	}
+	
+	public Customer findById(int id) {
+		return customerDAO.findByID(id);
+	}
 }

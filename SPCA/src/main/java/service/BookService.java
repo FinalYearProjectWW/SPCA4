@@ -30,6 +30,10 @@ public class BookService {
 		return bookDAO.findAll();
 	}
 	
+	public Book findBookById(int id) {
+		return bookDAO.findByID(id);
+	}
+	
 	public void addBook(Book book) {
 	    bookDAO.save(book);
 	}
