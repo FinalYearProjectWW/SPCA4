@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,11 +33,12 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
     
-    private Long totalAmount;
+    private double totalAmount;
     
     private String status;
     
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<OrderItem> orderItems = new ArrayList<>();
     
     public Order() {}
@@ -72,11 +75,11 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
-	public Long getTotalAmount() {
+	public double getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(Long totalAmount) {
+	public void setTotalAmount(double totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 

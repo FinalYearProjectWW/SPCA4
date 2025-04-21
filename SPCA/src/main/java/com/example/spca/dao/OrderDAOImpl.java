@@ -1,5 +1,7 @@
 package com.example.spca.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.example.spca.entities.Order;
@@ -24,12 +26,20 @@ public class OrderDAOImpl extends CommonDAOImpl<Order, Integer> implements Order
 	public Order findOrderByCustomerId(int customerId) {
 		// TODO Auto-generated method stub
 		try {
-			return em.createQuery("SELECT o FROM Order o WHERE o.customerId = :customerId", Order.class)
+			return em.createQuery("SELECT o FROM Order o WHERE o.customer.id = :customerId", Order.class)
 					.setParameter("customerId", customerId)
 					.getSingleResult();
 		}catch(jakarta.persistence.NoResultException e) {
 			return null;
 		}
+	}
+	
+	@Override
+	public List<Order> findAllOrdersByCustomerId(int customerId) {
+	    return em.createQuery(
+	            "SELECT o FROM Order o WHERE o.customer.id = :customerId ORDER BY o.orderDate DESC", Order.class)
+	            .setParameter("customerId", customerId)
+	            .getResultList();
 	}
 
 	@Override
@@ -45,12 +55,9 @@ public class OrderDAOImpl extends CommonDAOImpl<Order, Integer> implements Order
 	@Override
 	public Order findCartByCustomerId(int customerId) {
 		// TODO Auto-generated method stub
-		try {
-			return em.createQuery("SELECT o FROM Order o WHERE o.customer.id = :customerId AND o.status = 'IN_CART'", Order.class)
+		List<Order> orders = em.createQuery("SELECT o FROM Order o WHERE o.customer.id = :customerId AND o.status = 'IN_CART'", Order.class)
 					.setParameter("customerId", customerId)
-					.getSingleResult();		
-		}catch (jakarta.persistence.NoResultException e) {
-			return null;
-		}
+					.getResultList();	
+		return orders.isEmpty() ? null : orders.get(0);
 	}
 }

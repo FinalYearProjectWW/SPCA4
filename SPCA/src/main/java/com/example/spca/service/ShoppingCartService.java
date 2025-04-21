@@ -85,6 +85,7 @@ public class ShoppingCartService {
 	
 	public void internalAddItem(int customerId, OrderItem oi) {
 		Order o = getCartForCustomer(customerId);
+		oi.setOrder(o);
 		o.getOrderItems().add(oi);
 		orderDAO.saveOrUpdate(o);
 	}
