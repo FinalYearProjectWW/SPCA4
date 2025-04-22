@@ -3,9 +3,12 @@ package com.example.spca.strategypattern;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import com.example.spca.entities.Book;
 
-
+@Component("author")
 public class SortByAuthorStrategy implements SortingStrategy{
 
 	@Override

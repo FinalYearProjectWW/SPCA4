@@ -1,6 +1,8 @@
 package com.example.spca.service;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import com.example.spca.dao.BookDAO;
@@ -17,8 +19,10 @@ import jakarta.transaction.Transactional;
 public class BookService {
 		
 	private final BookDAO bookDAO;
+	private final Map<String, SortingStrategy> strategies;
 	
-	public BookService(BookDAO bDAO) {
+	public BookService(BookDAO bDAO, Map<String, SortingStrategy> strategies) {
+		this.strategies = strategies;
 		this.bookDAO = bDAO;
 	}
 	
@@ -50,21 +54,7 @@ public class BookService {
 	}
 	
 	public void sortBooks(List<Book> books, String sort, boolean ascending) {
-		SortingStrategy ss;
-		
-		switch(sort.toLowerCase()) {
-		case "title":
-			ss = new SortByTitleStrategy();
-			break;
-		case "price":
-			ss = new SortByPriceStrategy();
-			break;
-		case "author":
-			ss = new SortByAuthorStrategy();
-		default:
-			ss = new SortByTitleStrategy();
-			break;
-		}
-		ss.sort(books, ascending);
+		SortingStrategy strat = strategies.getOrDefault(sort.toLowerCase(), strategies.get("title"));
+		strat.sort(books, ascending);
 	}
 }
