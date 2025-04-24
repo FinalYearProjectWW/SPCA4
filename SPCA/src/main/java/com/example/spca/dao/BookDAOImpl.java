@@ -18,7 +18,7 @@ public class BookDAOImpl extends CommonDAOImpl<Book, Integer> implements BookDAO
 	}
 
 	@Override
-	public List<Book> searchByTitle(String title) {
+	public List<Book> searchBookByTitle(String title) {
 		// TODO Auto-generated method stub
 		TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.title = :title", Book.class);
 		query.setParameter("title", title);

@@ -2,9 +2,12 @@ package com.example.spca.service;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import com.example.spca.dao.CustomerDAO;
 import com.example.spca.entities.Customer;
+
+import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -25,8 +28,12 @@ public class CustomerService {
 		customerDAO.save(customer);
 	}
 	
-	public Customer authenticate(String email, String password) {
-		return customerDAO.findByEmailAndPassword(email, password);
+	public Customer authenticate(String username, String password) {
+		try {
+            return customerDAO.findByUsernameAndPassword(username, password);
+        } catch (NoResultException|EmptyResultDataAccessException e) {
+            return null;
+        }
 	}
 	
 	public Customer updateCustomer(Customer customer) {

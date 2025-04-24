@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.spca.dao.BookDAO;
 import com.example.spca.entities.Book;
-import com.example.spca.strategypattern.SortByAuthorStrategy;
-import com.example.spca.strategypattern.SortByPriceStrategy;
-import com.example.spca.strategypattern.SortByTitleStrategy;
 import com.example.spca.strategypattern.SortingStrategy;
 
 import jakarta.transaction.Transactional;
@@ -27,7 +24,7 @@ public class BookService {
 	}
 	
 	public List<Book> searchBooksByTitle(String title) {
-		return bookDAO.searchByTitle(title);
+		return bookDAO.searchBookByTitle(title);
 	}
 	
 	public List<Book> findAllBooks() {

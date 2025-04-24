@@ -31,10 +31,10 @@ public class CustomerDAOImpl extends CommonDAOImpl<Customer, Integer> implements
 	}
 
 	@Override
-	public Customer findByEmailAndPassword(String email, String password) {
+	public Customer findByUsernameAndPassword(String username, String password) {
 		// TODO Auto-generated method stub
-		TypedQuery<Customer> query = em.createQuery("SELECT c FROM Customer c WHERE c.email = :email AND c.password = :password", Customer.class);
-		query.setParameter("email", email);
+		TypedQuery<Customer> query = em.createQuery("SELECT c FROM Customer c WHERE c.username = :username AND c.password = :password", Customer.class);
+		query.setParameter("username", username);
 		query.setParameter("password", password);
 		return query.getSingleResult();
 	}

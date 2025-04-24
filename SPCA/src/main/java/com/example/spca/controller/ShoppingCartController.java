@@ -1,7 +1,6 @@
 package com.example.spca.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,7 +49,7 @@ public class ShoppingCartController {
         return ResponseEntity.ok(scs.calculateSubTotal(customerId));
     }
 	
-	@DeleteMapping("/{customerId}/clear")
+	@PostMapping("/{customerId}/clear")
     public ResponseEntity<Void> clearCart(@PathVariable int customerId) {
         scs.clearCart(customerId);
         return ResponseEntity.ok().build();

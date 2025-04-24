@@ -27,15 +27,6 @@ public class OrderProcessor extends AbstractOrderProcessor{
 	}
 
 	@Override
-	protected boolean processPayment(Order order) {
-		// TODO Auto-generated method stub
-		if(order.getCustomer() != null && order.getCustomer().getPaymentMethod() != null && !order.getCustomer().getPaymentMethod().isEmpty()) {
-			System.out.print("Payment processed for order " + order.getId() + " with method " + order.getCustomer().getPaymentMethod());
-		}
-		return true;
-	}
-
-	@Override
 	protected void updateStock(Order order) {
 		// TODO Auto-generated method stub
 		for(OrderItem items: order.getOrderItems()) {

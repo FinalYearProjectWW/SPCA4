@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Admin — SPCA</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+	<nav class="navbar bg-light mb-4 px-3">
+		<a class="navbar-brand" href="index.html">SPCA</a>
+	</nav>
+	<div class="container">
+		<h1>Admin Panel</h1>
+
+		<section class="mb-5">
+			<h2>Stock Management</h2>
+			<form id="controls" class="row g-2 mb-3" onsubmit="return false;">
+				<div class="col-md-4"><input id="search" class="form-control" placeholder="Search by title…"></div>
+				<div class="col-md-3">
+					<select id="sort" class="form-select">
+						<option value="title">Title</option>
+						<option value="author">Author</option>
+						<option value="price">Price</option>
+						<option value="publisher">Publisher</option>
+					</select>
+				</div>
+				<div class="col-md-2">
+					<select id="asc" class="form-select">
+						<option value="true">Asc</option>
+						<option value="false">Desc</option>
+					</select>
+				</div>
+				<div class="col-auto"><button id="apply" class="btn btn-primary">Apply</button></div>
+			</form>
+			<table class="table table-striped" id="stocks">
+				<thead>
+					<tr>
+						<th>Title</th>
+						<th>Author</th>
+						<th>Publisher</th>
+						<th>Price</th>
+						<th>Category</th>
+						<th>Stock</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</section>
+
+		<section class="mb-5">
+			<h2>Customers & Orders</h2>
+			<div id="customers"></div>
+		</section>
+
+		<section class="mb-5">
+			<h2>Add New Book</h2>
+			<form id="addBookForm" action="/api/books/addBook" method="post" enctype="multipart/form-data"
+				class="row g-3">
+				<div class="col-md-6"><input name="title" class="form-control" placeholder="Title" required></div>
+				<div class="col-md-6"><input name="author" class="form-control" placeholder="Author" required></div>
+				<div class="col-md-4"><input name="publisher" class="form-control" placeholder="Publisher" required>
+				</div>
+				<div class="col-md-4"><input type="number" name="price" step="0.01" class="form-control"
+						placeholder="Price" required></div>
+				<div class="col-md-4"><input name="category" class="form-control" placeholder="Category" required></div>
+				<div class="col-md-4"><input type="file" name="imageFile" accept="image/jpeg" class="form-control"
+						required></div>
+				<div class="col-12"><button type="submit" class="btn btn-success">Add Book</button></div>
+			</form>
+		</section>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		(() => {
+			const api = (u, o = {}) => fetch(u, {credentials: 'same-origin', ...o})
+				.then(r => r.ok ? (r.status === 204 ? [] : r.json()) : Promise.reject()),
+				s = document.getElementById('search'),
+				so = document.getElementById('sort'),
+				a = document.getElementById('asc'),
+				btn = document.getElementById('apply'),
+				tb = document.querySelector('#stocks tbody'),
+				cust = document.getElementById('customers'),
+				form = document.getElementById('addBookForm');
+
+			async function loadStocks() {
+				const p = new URLSearchParams({sort: so.value, ascending: a.value});
+				if (s.value) p.set('title', s.value);
+				tb.innerHTML = '';
+				(await api(`/api/books/getAll?${p}`)).forEach(async b => {
+					let stock = 0; try {stock = await api(`/api/inventory/${b.id}/stock`)} catch { }
+					const tr = document.createElement('tr');
+					tr.innerHTML = `
+            <td>${b.title}</td>
+            <td>${b.author}</td>
+            <td>${b.publisher || ''}</td>
+            <td>$${b.price.toFixed(2)}</td>
+            <td>${b.category}</td>
+            <td>${stock}</td>
+            <td>
+              <button data-id="${b.id}" data-action="restock" class="btn btn-sm btn-primary me-1">Restock</button>
+              <button data-id="${b.id}" data-action="delete" class="btn btn-sm btn-danger">Delete</button>
+            </td>`;
+					tb.append(tr);
+				});
+			}
+
+			document.getElementById('stocks').addEventListener('click', e => {
+				const b = e.target.closest('button'); if (!b) return;
+				const {id, action} = b.dataset;
+				if (action === 'restock') {
+					const n = +prompt('Enter quantity to restock:');
+					n > 0 && api(`/api/inventory/${id}/restock?qty=${n}`, {method: 'POST'}).then(loadStocks);
+				} else if (action === 'delete') {
+					api(`/api/books/${id}`, {method: 'DELETE'}).then(loadStocks);
+				}
+			});
+
+			async function loadCustomers() {
+				cust.innerHTML = '';
+				for (const c of await api('/api/customers/listAll')) {
+					const d = document.createElement('div');
+					d.className = 'mb-4';
+					d.innerHTML = `<h5>${c.username}</h5>`;
+					const ords = await api(`/api/orders/customer/${c.id}/all`);
+					if (ords.length) ords.forEach(o => {
+						const card = document.createElement('div');
+						card.className = 'card mb-2';
+						card.innerHTML = `
+              <div class="card-body">
+                <strong>Order #${o.id}</strong> — $${o.totalAmount.toFixed(2)}<br>Status: ${o.status}
+              </div>`;
+						d.append(card);
+					});
+					else d.append(Object.assign(document.createElement('p'), {textContent: 'No orders'}));
+					cust.append(d);
+				}
+			}
+
+			btn.addEventListener('click', () => {loadStocks(); loadCustomers()});
+			form.addEventListener('submit', e => {
+				e.preventDefault();
+				fetch(form.action, {method: 'POST', credentials: 'same-origin', body: new FormData(form)})
+					.then(() => {form.reset(); loadStocks(); loadCustomers()});
+			});
+
+			document.addEventListener('DOMContentLoaded', () => {loadStocks(); loadCustomers()});
+		})();
+	</script>
+</body>
+
+</html>

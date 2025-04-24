@@ -42,12 +42,9 @@ public class InventoryController {
 	}
 
 	
-	@PostMapping("/{bookId}/{action}")
-	public ResponseEntity<Void> action(@PathVariable int bookId, @PathVariable String action, @RequestParam int qty) {
-		InventoryCommand cmd = icf.get(action+"Cmd");
-		if(cmd == null) {
-			return ResponseEntity.badRequest().build();
-		}
+	@PostMapping("/{bookId}/restock")
+	public ResponseEntity<Void> action(@PathVariable int bookId, @RequestParam int qty) {
+		InventoryCommand cmd = icf.get("restockCmd");
 		cmd.execute(bookId, qty);
 		return ResponseEntity.noContent().build();
 	}

@@ -5,5 +5,5 @@ import com.example.spca.entities.Book;
 
 
 public interface BookDAO extends CommonDAO<Book, Integer> {
-	List<Book> searchByTitle(String title);
+	List<Book> searchBookByTitle(String title);
 }

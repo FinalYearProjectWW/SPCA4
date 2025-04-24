@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Catalogue</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+	<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+		<div class="container">
+			<a class="navbar-brand" href="/catalogue.html">Bookshop</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse justify-content-end" id="nav">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link" href="/cart.html">Cart</a></li>
+					<li class="nav-item">
+						<a class="nav-link" href="#"
+							onclick="api('/api/logout',{method:'POST'}).then(()=>location='/')">
+							Logout
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<h1 class="mb-4">Browse Books</h1>
+
+		<form id="controls" class="row g-2 mb-4" onsubmit="return false;">
+			<div class="col-md-4">
+				<input id="q" class="form-control" placeholder="Search by title…">
+			</div>
+			<div class="col-md-3">
+				<select id="categoryFilter" class="form-select">
+					<option value="">All Categories</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<select id="sort" class="form-select">
+					<option value="title">Title</option>
+					<option value="author">Author</option>
+					<option value="price">Price</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<select id="asc" class="form-select">
+					<option value="true">Asc</option>
+					<option value="false">Desc</option>
+				</select>
+			</div>
+			<div class="col-auto">
+				<button id="apply" class="btn btn-primary">Apply</button>
+			</div>
+		</form>
+
+		<div id="grid" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		const api = (u, opts = {}) =>
+			fetch(u, {credentials: 'include', headers: {'Content-Type': 'application/json'}, ...opts})
+				.then(r => r.ok ? r.json().catch(() => r) : Promise.reject(r));
+
+		async function loadBooks() {
+			const q = document.getElementById('q').value.trim(),
+				cat = document.getElementById('categoryFilter').value,
+				sort = document.getElementById('sort').value,
+				asc = document.getElementById('asc').value;
+
+			const params = new URLSearchParams({sort, ascending: asc});
+			if (q) params.set('title', q);
+			if (cat) params.set('category', cat);
+
+			const books = await api(`/api/books/getAll?${params}`);
+
+			const sel = document.getElementById('categoryFilter');
+			sel.innerHTML = '<option value="">All Categories</option>';
+			Array.from(new Set(books.map(b => b.category)))
+				.sort()
+				.forEach(c => sel.append(new Option(c, c)));
+
+			document.getElementById('grid').innerHTML = books.map(b => `
+        <div class="col">
+          <div class="card h-100 shadow-sm">
+            <img src="${b.image}" class="card-img-top" style="height:200px;object-fit:cover">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">${b.title}</h5>
+              <p class="card-text flex-grow-1">
+                <small class="text-muted">By ${b.author}</small><br>
+                <span class="badge bg-info text-dark">${b.category}</span>
+              </p>
+              <div class="d-flex justify-content-between align-items-center mt-auto">
+                <span class="fw-bold">$${b.price.toFixed(2)}</span>
+                <a href="book.html?id=${b.id}" class="btn btn-sm btn-primary">Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+		}
+
+		document.getElementById('apply').addEventListener('click', loadBooks);
+
+		loadBooks().catch(() => location = '/');
+	</script>
+</body>
+
+</html>

@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Book {
@@ -20,15 +22,19 @@ public class Book {
 	private String category;
 	private String isbn;
 	
-	@Column(name = "image")
-	private String image;
+	@Transient
+	private Double averageRating;
+
+	@Lob
+    @Column(name = "image", columnDefinition = "MEDIUMBLOB")
+	private byte[] image;
 	
 	@Column(name = "stock_level")
 	private Integer stockLevel;
 	
 	public Book() {}
 	
-	  public Book(String t, String a, String pub, Double price, String c, String isbn, String i, Integer sl) {
+	  public Book(String t, String a, String pub, Double price, String c, String isbn, byte[] i, Integer sl) {
 	        this.title = t;
 	        this.author = a;
 	        this.publisher = pub;
@@ -95,11 +101,11 @@ public class Book {
 		this.isbn = isbn;
 	}
 
-	public String getImage() {
+	public byte[] getImage() {
 		return image;
 	}
 
-	public void setImage(String i) {
+	public void setImage(byte[] i) {
 		this.image = i;
 	}
 
@@ -109,5 +115,13 @@ public class Book {
 
 	public void setStockLevel(Integer stockLevel) {
 		this.stockLevel = stockLevel;
+	}
+	
+	public Double getAverageRating() {
+		return averageRating;
+	}
+
+	public void setAverageRating(Double averageRating) {
+		this.averageRating = averageRating;
 	}
 }
