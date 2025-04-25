@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.spca.commandpattern.InventoryCommand;
-import com.example.spca.commandpattern.InventoryCommandFactory;
+import com.example.spca.commandpatternandfactorypattern.InventoryCommand;
+import com.example.spca.commandpatternandfactorypattern.InventoryCommandFactory;
 import com.example.spca.dao.BookDAO;
 import com.example.spca.entities.Book;
 

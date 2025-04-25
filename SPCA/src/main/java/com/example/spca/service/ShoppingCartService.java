@@ -5,9 +5,9 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.spca.commandpattern.AddItemCommand;
-import com.example.spca.commandpattern.CartInvoker;
-import com.example.spca.commandpattern.RemoveItemCommand;
+import com.example.spca.commandpatternandfactorypattern.AddItemCommand;
+import com.example.spca.commandpatternandfactorypattern.CartInvoker;
+import com.example.spca.commandpatternandfactorypattern.RemoveItemCommand;
 import com.example.spca.dao.OrderDAO;
 import com.example.spca.entities.Book;
 import com.example.spca.entities.Customer;

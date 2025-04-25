@@ -1,4 +1,4 @@
-package com.example.spca.commandpattern;
+package com.example.spca.commandpatternandfactorypattern;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

@@ -1,4 +1,4 @@
-package com.example.spca.commandpattern;
+package com.example.spca.commandpatternandfactorypattern;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

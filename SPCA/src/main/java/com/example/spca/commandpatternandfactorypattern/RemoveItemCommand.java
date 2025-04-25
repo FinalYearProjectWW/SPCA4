@@ -1,15 +1,16 @@
-package com.example.spca.commandpattern;
+package com.example.spca.commandpatternandfactorypattern;
 
 import com.example.spca.entities.OrderItem;
 import com.example.spca.service.ShoppingCartService;
 
-public class AddItemCommand implements CartCommand{
+public class RemoveItemCommand implements CartCommand{
 	
 	private ShoppingCartService scs;
 	private int customerId;
-	private OrderItem oi;
+    private OrderItem oi;
+
 	
-	public AddItemCommand(ShoppingCartService scs, int customerId, OrderItem oi) {
+	public RemoveItemCommand(ShoppingCartService scs, int customerId, OrderItem oi) {
 		this.scs = scs;
 		this.customerId = customerId;
 		this.oi = oi;
@@ -18,13 +19,12 @@ public class AddItemCommand implements CartCommand{
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
-		scs.internalAddItem(customerId, oi);
-		
+		scs.internalRemoveItem(customerId, oi);
 	}
 
 	@Override
 	public void undo() {
 		// TODO Auto-generated method stub
-		scs.internalRemoveItem(customerId, oi);
+		scs.internalAddItem(customerId, oi);
 	}
 }

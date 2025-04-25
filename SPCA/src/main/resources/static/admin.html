@@ -88,11 +88,16 @@
 				form = document.getElementById('addBookForm');
 
 			async function loadStocks() {
-				const p = new URLSearchParams({sort: so.value, ascending: a.value});
-				if (s.value) p.set('title', s.value);
+				const q = s.value.trim(),
+					sort = so.value,
+					asc = a.value;
+				const p = new URLSearchParams({sort, ascending: asc});
+				if (q) p.set('title', q);
 				tb.innerHTML = '';
-				(await api(`/api/books/getAll?${p}`)).forEach(async b => {
-					let stock = 0; try {stock = await api(`/api/inventory/${b.id}/stock`)} catch { }
+				const books = await api(`/api/books/getAll?${p.toString()}`);
+				for (const b of books) {
+					let stock = 0;
+					try {stock = await api(`/api/inventory/${b.id}/stock`);} catch { }
 					const tr = document.createElement('tr');
 					tr.innerHTML = `
             <td>${b.title}</td>
@@ -106,7 +111,7 @@
               <button data-id="${b.id}" data-action="delete" class="btn btn-sm btn-danger">Delete</button>
             </td>`;
 					tb.append(tr);
-				});
+				}
 			}
 
 			document.getElementById('stocks').addEventListener('click', e => {

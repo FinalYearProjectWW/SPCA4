@@ -1,4 +1,4 @@
-package com.example.spca.commandpattern;
+package com.example.spca.commandpatternandfactorypattern;
 
 public interface CartCommand {
 	public void execute();
