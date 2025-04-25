@@ -75,10 +75,17 @@
 				asc = document.getElementById('asc').value;
 
 			const params = new URLSearchParams({sort, ascending: asc});
-			if (q) params.set('title', q);
-			if (cat) params.set('category', cat);
+			let url;
+			if(q) {
+				params.set('title', q);
+				url =  `/api/books/search?${params}`;
+			}else {
+			    if (cat) params.set('category', cat);
+			    url = `/api/books/getAll?${params}`;
+			  }
+			  
+			  const books = await api(url);
 
-			const books = await api(`/api/books/getAll?${params}`);
 
 			const sel = document.getElementById('categoryFilter');
 			sel.innerHTML = '<option value="">All Categories</option>';

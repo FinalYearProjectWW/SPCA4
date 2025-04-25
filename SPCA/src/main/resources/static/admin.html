@@ -92,9 +92,17 @@
 					sort = so.value,
 					asc = a.value;
 				const p = new URLSearchParams({sort, ascending: asc});
-				if (q) p.set('title', q);
+				let url;
+				if (q) {
+					p.set('title', q);
+					url = `/api/books/search?${p.toString()}`;
+				} else {
+					url = `/api/books/getAll?${p.toString()}`;
+				}
+				
+				const books = await api(url);
+
 				tb.innerHTML = '';
-				const books = await api(`/api/books/getAll?${p.toString()}`);
 				for (const b of books) {
 					let stock = 0;
 					try {stock = await api(`/api/inventory/${b.id}/stock`);} catch { }
